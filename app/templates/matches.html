@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>All Matches</title>
+  <!-- Chart.js CDN for Day 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Imported Matches</h1>
+
+  <table border="1" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Venue</th>
+        <th>Team 1</th>
+        <th>Team 2</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in matches %}
+      <tr>
+        <td>{{ match.date.strftime('%Y-%m-%d') }}</td>
+        <td>{{ match.venue }}</td>
+        <td>{{ match.team1.name }}</td>
+        <td>{{ match.team2.name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Canvas placeholder for Chart.js -->
+  <h2>Performance Chart</h2>
+  <canvas id="runsChart" width="400" height="200"></canvas>
+
+  <script>
+    // Day 3: Fetch data from /api/performances and render Chart.js
+    fetch('/api/performances')
+      .then(res => res.json())
+      .then(json => {
+        const labels = json.performances.map(p => p.player);
+        const data = json.performances.map(p => p.total_runs);
+        const ctx = document.getElementById('runsChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Total Runs',
+              data: data
+            }]
+          }
+        });
+      });
+  </script>
+</body>
+</html>

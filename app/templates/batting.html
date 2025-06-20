@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Batting Leaders</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Batting: Total Runs by Player</h1>
+  <canvas id="battingChart" width="600" height="400"></canvas>
+
+  <script>
+    // Fetch runs data and render bar chart
+    fetch('/api/performances?metric=runs')
+      .then(res => res.json())
+      .then(json => {
+        const labels = json.data.map(d => d.player);
+        const values = json.data.map(d => d.value);
+        const ctx = document.getElementById('battingChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: json.label,
+              data: values
+            }]
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      });
+  </script>
+</body>
+</html>

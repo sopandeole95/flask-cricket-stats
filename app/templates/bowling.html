@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bowling Leaders</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Bowling: Total Wickets by Player</h1>
+  <canvas id="bowlingChart" width="600" height="400"></canvas>
+
+  <script>
+    // Fetch wickets data and render bar chart
+    fetch('/api/performances?metric=wickets')
+      .then(res => res.json())
+      .then(json => {
+        const labels = json.data.map(d => d.player);
+        const values = json.data.map(d => d.value);
+        const ctx = document.getElementById('bowlingChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: json.label,
+              data: values
+            }]
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      });
+  </script>
+</body>
+</html>
